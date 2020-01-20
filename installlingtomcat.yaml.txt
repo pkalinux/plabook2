@@ -1,0 +1,21 @@
+- name: installing appache and checking url
+  hosts: all
+  tasks:
+    - name: installing tomcat
+      yum:
+        name: tomcat
+        state: present
+        update_cache: yes
+    - name: changing port
+      replace:
+       path: /etc/tomcat/server.xml
+       regexp: 8080
+       replace: 9090
+    - name: restarting services
+      service:
+         name: tomcat
+         state: restarted
+    - name: checking if url is working
+      uri:
+       url: http://172.17.0.1:9090
+       status: 200
